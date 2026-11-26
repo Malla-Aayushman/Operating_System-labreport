@@ -1,16 +1,22 @@
 #include <stdio.h>
 
+#define P 4
+
 int main(void) {
-    int pageTable[] = {5, 2, 8, 1};
-    int address, page, offset, pageSize = 1000;
+    int frame[P], size, addr, page, off;
 
-    printf("Logical address (0-3999): ");
-    scanf("%d", &address);
-    if (address < 0 || address >= 4000) return 1;
+    printf("Page size: ");
+    if (scanf("%d", &size) != 1 || size < 1) return 1;
+    printf("Frame number for each of %d pages: ", P);
+    for (int i = 0; i < P; i++)
+        if (scanf("%d", &frame[i]) != 1 || frame[i] < 0) return 1;
 
-    page = address / pageSize;
-    offset = address % pageSize;
+    printf("Logical address (0-%d): ", P * size - 1);
+    if (scanf("%d", &addr) != 1 || addr < 0 || addr >= P * size) return 1;
+
+    page = addr / size;
+    off = addr % size;
     printf("Page %d, offset %d, physical address %d\n",
-           page, offset, pageTable[page] * pageSize + offset);
+           page, off, frame[page] * size + off);
     return 0;
 }
